@@ -33,7 +33,7 @@ spec:
     spec:
       containers:
       - name: nginx-container
-        image: stratcastor/duo-deploy-nginx:latest
+        image: esarkus/duo-deploy-nginx:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 80

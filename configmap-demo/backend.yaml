@@ -34,6 +34,6 @@ spec:
       containers:
       - name: backend
         imagePullPolicy: Always
-        image: stratcastor/duo-backend:latest
+        image: esarkus/duo-backend:latest
         ports:
         - containerPort: 5500

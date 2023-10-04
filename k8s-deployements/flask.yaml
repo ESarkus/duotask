@@ -33,7 +33,7 @@ spec:
     spec:
       containers:
       - name: flask-container
-        image: stratcastor/duo-deploy-flask:latest
+        image: esarkus/duo-deploy-flask:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 5500
