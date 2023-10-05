@@ -1,58 +1,29 @@
 pipeline {
     agent any
-    stages {
+    stage 
         stage('Build') {
             steps {
-                script {
-                    if (env.GIT_BRANCH == 'development') {
-                    sh 'docker build -t esarkus/duo-backend:latest -t stratcastor/duo-backend:$BUILD_NUMBER .'
-                    } else {
-                        sh "echo 'Build not required!'"
-                    }
+                 sh '''docker build -t esarkus/flask-app:latest
+                       docker build -t esarkus/nginx:latest ./nginx
+                    '''
                 }
-            }
         }
         stage('Push') {
             steps {
-                script {
-                    if (env.GIT_BRANCH == 'development') {
                         sh '''
-                        docker push esarkus/duo-backend:latest
-                        docker push esarkus/duo-backend:$BUILD_NUMBER
+                        docker push esarkus/flask-app:latest
+                        docker push esarkus/nginx:latest
                         '''
-                    } else {
-                        sh "echo 'Push not required!'"
-                    }
+                    } 
                 }
-            }
-        }
         stage('Deploy') {
             steps {
                 script {
-                    if (env.GIT_BRANCH == 'development') {
                         sh'''
                         kubectl apply -f . --namespace=development
-                        kubectl rollout restart deployment backend --namespace=development
-                        '''
-                    } else if (env.GIT_BRANCH == 'main') {
-                        sh'''
-                        kubectl apply -f . --namespace=production
-                        kubectl rollout restart deployment backend --namespace=production
-                        '''
-                    } else {
-                        sh'''
-                        echo "unrecognised branch"
+                        kubectl rollout restart deployment --namespace=development
                         '''
                     }
                 }
             }
-        }
-        stage('Clean Up') { 
-            steps {
-                sh '''
-                docker system prune -a --force
-                '''
-            }
-        }
     }
-}
